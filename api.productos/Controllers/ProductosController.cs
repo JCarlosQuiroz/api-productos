@@ -6,14 +6,9 @@ namespace Api.Productos.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductosController : ControllerBase
+    public class ProductosController(IProductoService productoService) : ControllerBase
     {
-        private readonly IProductoService _productoService;
-
-        public ProductosController(IProductoService productoService)
-        {
-            _productoService = productoService;
-        }
+        private readonly IProductoService _productoService = productoService;
 
         /// <summary>
         /// Obtiene una lista de productos con filtros opcionales.

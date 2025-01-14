@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuración de servicios
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -15,7 +16,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Esta API permite gestionar un catálogo de productos con operaciones de creación, actualización, eliminación y búsqueda."
     });
 
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Api.Productos.xml"));
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "api.productos.xml"));
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -24,6 +25,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IProductoService, ProductoService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    context.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {
